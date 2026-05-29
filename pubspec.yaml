@@ -1,0 +1,31 @@
+name: peekaboo_mvp
+description: Peekaboo MVP - Android-first E Ink-aware reading app for children.
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  supabase_flutter: ^2.6.0
+  shared_preferences: ^2.3.2
+  http: ^1.2.2
+  collection: ^1.18.0
+  epubx: ^4.0.0
+  syncfusion_flutter_pdfviewer: ^26.2.14
+  record: ^5.1.2
+  file_picker: ^8.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/books/sample_story.txt
+    - assets/books/sample_story_meta.json
