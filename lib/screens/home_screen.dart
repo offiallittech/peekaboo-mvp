@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         : await _importer.openPdfPlaceholder(file.bytes!, bookId: 'local-${DateTime.now().millisecondsSinceEpoch}', title: file.name);
     await _supabase.uploadEbookMetadata(title: imported.title, storagePath: 'ebooks/${file.name}', format: extension);
     if (!mounted) return;
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => ReaderScreen(book: imported, supabase: _supabase, einkRefresh: _eink)));
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => ReaderScreen(book: imported, supabase: _supabase, einkRefresh: _eink)));
   }
 
   @override
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Peekaboo'), actions: [
         TextButton.icon(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ParentDashboardScreen())),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const ParentDashboardScreen())),
           icon: const Icon(Icons.insights_outlined),
           label: const Text('Parent'),
         )
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(book.title, style: Theme.of(context).textTheme.headlineMedium),
                       subtitle: Text('${book.author}\nEPUB/PDF upload path is wired through Supabase Storage; this demo opens the bundled story.'),
                       trailing: const Icon(Icons.menu_book_outlined, size: 44),
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ReaderScreen(book: book, supabase: _supabase, einkRefresh: _eink))),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => ReaderScreen(book: book, supabase: _supabase, einkRefresh: _eink))),
                     ),
                   ),
                   const SizedBox(height: 24),
