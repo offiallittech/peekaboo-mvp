@@ -109,6 +109,12 @@ flutter test
 flutter run -d <android-tablet-device-id>
 ```
 
+For an Android debug APK configured with `SUPABASE_URL` and `SUPABASE_ANON_KEY` from `.env`, run:
+
+```bash
+scripts/build_android_configured.sh
+```
+
 ### 4. Verify repository completeness
 
 From the repository root:
