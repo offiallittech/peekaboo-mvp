@@ -54,11 +54,18 @@ Deno.serve(async (req: Request) => {
         ],
       }),
     });
-    if (!resp.ok) return jsonResponse({ error: "OpenAI vocabulary generation failed", detail: await resp.text() }, 502);
-    const data = await resp.json();
-    explanation = JSON.parse(data.choices?.[0]?.message?.content ?? "{}");
-    explanation.word = word;
-    explanation.mock = false;
+    if (!resp.ok) {
+      explanation = {
+        ...mockExplanation(word, readingLevel),
+        provider_error: "OpenAI vocabulary generation failed; returning demo fallback.",
+        provider_status: resp.status,
+      };
+    } else {
+      const data = await resp.json();
+      explanation = JSON.parse(data.choices?.[0]?.message?.content ?? "{}");
+      explanation.word = word;
+      explanation.mock = false;
+    }
   }
 
   if (userId) {
