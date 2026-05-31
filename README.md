@@ -23,6 +23,7 @@ peekaboo_mvp/
 ├── README.md
 ├── pubspec.yaml                 # Flutter app may live at repo root
 ├── android/
+├── ios/                         # iOS Runner project for local Xcode/iPhone builds
 ├── lib/
 │   ├── main.dart
 │   ├── theme/                   # E Ink visual tokens and widgets
@@ -113,6 +114,18 @@ For an Android debug APK configured with `SUPABASE_URL` and `SUPABASE_ANON_KEY` 
 
 ```bash
 scripts/build_android_configured.sh
+```
+
+For iPhone/Xcode setup and local run instructions, see:
+
+```text
+docs/ios-local-setup.md
+```
+
+On macOS with an iPhone connected, you can run the configured iOS app with:
+
+```bash
+scripts/run_ios_configured.sh
 ```
 
 ### 4. Verify repository completeness
