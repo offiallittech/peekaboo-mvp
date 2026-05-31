@@ -32,19 +32,6 @@ begin
 end;
 $$;
 
-create or replace function public.is_admin()
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1 from public.profiles p
-    where p.id = auth.uid() and p.role = 'admin'
-  );
-$$;
-
 -- ---------- Core identity ----------
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -60,6 +47,19 @@ create table if not exists public.profiles (
 create trigger profiles_set_updated_at
 before update on public.profiles
 for each row execute function public.set_updated_at();
+
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles p
+    where p.id = auth.uid() and p.role = 'admin'
+  );
+$$;
 
 create or replace function public.handle_new_user()
 returns trigger

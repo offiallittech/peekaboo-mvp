@@ -24,8 +24,11 @@ Deno.serve(async (req: Request) => {
   if (options) return options;
   if (req.method !== "POST") return jsonResponse({ error: "Method not allowed" }, 405);
 
+  // The MVP Android client currently calls with the public anon key before a
+  // parent auth session exists. Treat auth as optional for vocabulary demo mode:
+  // authenticated requests are persisted; anon requests return a child-safe
+  // explanation without writing user data.
   const userId = await getAuthUserId(req);
-  if (!userId) return jsonResponse({ error: "Unauthorized" }, 401);
 
   const body = await readJson<VocabRequest>(req);
   const word = String(body.word ?? "").trim();
@@ -58,23 +61,25 @@ Deno.serve(async (req: Request) => {
     explanation.mock = false;
   }
 
-  // Best-effort persistence. Service role bypasses RLS, but child ownership is enforced by DB FK/RLS for client writes elsewhere.
-  try {
-    await supabaseRest("vocabulary_lookups", {
-      method: "POST",
-      body: JSON.stringify({
-        requester_id: userId,
-        child_id: body.child_id ?? null,
-        word,
-        definition: String(explanation.kid_friendly_definition ?? explanation.definition ?? ""),
-        example_sentence: explanation.example_sentence ?? null,
-        image_prompt: explanation.image_prompt ?? null,
-        source: explanation.mock ? "mock" : "openai",
-        metadata: explanation,
-      }),
-    });
-  } catch (_err) {
-    // Keep function useful in local/demo mode even if database env is absent.
+  if (userId) {
+    // Best-effort persistence. Service role bypasses RLS, but child ownership is enforced by DB FK/RLS for client writes elsewhere.
+    try {
+      await supabaseRest("vocabulary_lookups", {
+        method: "POST",
+        body: JSON.stringify({
+          requester_id: userId,
+          child_id: body.child_id ?? null,
+          word,
+          definition: String(explanation.kid_friendly_definition ?? explanation.definition ?? ""),
+          example_sentence: explanation.example_sentence ?? null,
+          image_prompt: explanation.image_prompt ?? null,
+          source: explanation.mock ? "mock" : "openai",
+          metadata: explanation,
+        }),
+      });
+    } catch (_err) {
+      // Keep function useful in local/demo mode even if database env is absent.
+    }
   }
 
   return jsonResponse(explanation);
