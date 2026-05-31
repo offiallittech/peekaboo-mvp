@@ -16,7 +16,7 @@ dependencies:
   collection: ^1.18.0
   epubx: ^4.0.0
   syncfusion_flutter_pdfviewer: ^33.2.8
-  record: ^7.0.0
+  record: ^6.1.2
   file_picker: ^8.1.2
 
 dev_dependencies:
